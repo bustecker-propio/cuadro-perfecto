@@ -7,7 +7,6 @@ export const getFotos = async (galeria_id = null) => {
 };
 
 export const subirFoto = async (formData) => {
-  // Para enviar archivos (imágenes), necesitamos usar FormData y cambiar el header
   const response = await apiClient.post('/galeria/fotos/', formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
@@ -67,7 +66,6 @@ export const responderSolicitud = async (id, accion) => {
 };
 
 export const vincularCuadro = async (codigo, galeria_id) => {
-  // galeria_id puede ser opcional/nulo ahora
   const response = await apiClient.post('/galeria/marco/vincular/confirmar/', { codigo, galeria_id });
   return response.data;
 };
@@ -86,8 +84,8 @@ export const seleccionarGaleriaActiva = async (galeria_id) => {
   const response = await apiClient.post('/galeria/marco/cambiar-galeria/', { galeria_id });
   return response.data;
 };
+
 export const desvincularCuadro = async (marcoId) => {
-  const response = await apiClient.delete(/galeria/marco//desvincular/);
+  const response = await apiClient.delete(`/galeria/marco/${marcoId}/desvincular/`);
   return response.data;
 };
-

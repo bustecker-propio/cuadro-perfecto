@@ -289,10 +289,12 @@ function App() {
           onVincularSuccess={cargarMarcos}
           marcos={marcos}
           cargarMarcos={cargarMarcos}
+        />
       )}
     </>
   );
 }
+
 
 
 export default App;
