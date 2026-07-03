@@ -997,6 +997,52 @@ void limpiarFotosLocales() {
 }
 
 // =========================================================================
+// =========================================================================
+// Función para reiniciar el dispositivo de fábrica
+// =========================================================================
+void resetearDispositivo() {
+  Serial.println("Reseteando dispositivo a modo fábrica...");
+  tft.fillScreen(TFT_BLACK);
+  tft.setTextColor(TFT_WHITE);
+  tft.setTextDatum(MC_DATUM);
+  tft.drawString("Reseteando...", 240, 160, 4);
+  
+  if (LittleFS.exists("/token.txt")) {
+    LittleFS.remove("/token.txt");
+  }
+  
+  WiFiManager wm;
+  wm.resetSettings();
+  WiFi.disconnect(true, true);
+  
+  delay(1000);
+  ESP.restart();
+}
+
+// =========================================================================
+// Muestra pantalla de dispositivo huérfano y espera toque para resetear
+// =========================================================================
+void mostrarPantallaDesvinculadoYEsperarReset() {
+  tft.fillScreen(TFT_ORANGE);
+  tft.setTextColor(TFT_WHITE);
+  tft.setTextDatum(MC_DATUM);
+  tft.drawString("Dispositivo Desvinculado", 240, 100, 4);
+  tft.drawString("Este marco no pertenece a ninguna cuenta.", 240, 150, 2);
+  
+  tft.fillRoundRect(80, 200, 320, 60, 10, TFT_RED);
+  tft.setTextColor(TFT_WHITE);
+  tft.drawString("TOCA AQUI PARA RESETEAR", 240, 230, 4);
+
+  while (true) {
+    uint16_t x = 0, y = 0;
+    if (tft.getTouch(&x, &y)) {
+      resetearDispositivo();
+    }
+    delay(100);
+  }
+}
+
+// =========================================================================
 // Sincroniza catálogo completo de imágenes con el servidor Django (Alta
 // Confiabilidad) Descarga fotos nuevas y elimina fotos locales que ya no
 // existen en el servidor
@@ -1029,6 +1075,9 @@ void sincronizarCatalogoCompleto() {
   int httpCode = http.GET();
   if (httpCode == HTTP_CODE_OK) {
     String payload = http.getString();
+    
+    // ... logic remains unchanged for parsing ...
+
 
     JsonDocument doc;
     DeserializationError error = deserializeJson(doc, payload);
@@ -1161,6 +1210,11 @@ void sincronizarCatalogoCompleto() {
     } else {
       Serial.println("Error: Catalogo JSON invalido o vacio.");
     }
+  } else if (httpCode == 404 || httpCode == 401) {
+    Serial.println("Dispositivo desvinculado (Error 404/401). Mostrando pantalla de reseteo...");
+    http.end();
+    mostrarPantallaDesvinculadoYEsperarReset();
+    return; // Nunca debería llegar aquí por el bucle infinito
   } else {
     Serial.printf("Error al obtener catalogo. Codigo HTTP: %d\n", httpCode);
   }

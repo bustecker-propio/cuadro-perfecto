@@ -7,10 +7,11 @@ import {
   solicitarUnirse, 
   getSolicitudesPendientes, 
   responderSolicitud, 
-  vincularCuadro 
+  vincularCuadro,
+  desvincularCuadro
 } from '../api/galeria';
 
-const SettingsModal = ({ onClose, activeGaleriaId, onGaleriaChange, resaltarVincular, onVincularSuccess }) => {
+const SettingsModal = ({ onClose, activeGaleriaId, onGaleriaChange, resaltarVincular, onVincularSuccess, marcos, cargarMarcos }) => {
   const [galerias, setGalerias] = useState([]);
   const [solicitudes, setSolicitudes] = useState([]);
   
@@ -158,7 +159,19 @@ const SettingsModal = ({ onClose, activeGaleriaId, onGaleriaChange, resaltarVinc
     }
   };
 
+  const handleDesvincularCuadro = async (id, nombre) => {
+    if (!window.confirm(`¿Seguro que quieres desvincular el marco "${nombre}"?\nEsta acción lo borrará de tu cuenta y reseteará el dispositivo.`)) return;
+    try {
+      await desvincularCuadro(id);
+      if (cargarMarcos) await cargarMarcos();
+    } catch (error) {
+      console.error("Error al desvincular cuadro:", error);
+      alert(error.response?.data?.error || "Error al desvincular.");
+    }
+  };
+
   return (
+
     <div className="modal-overlay">
       <div className="modal-card">
         <button onClick={onClose} className="btn-close-modal">✕</button>
@@ -278,6 +291,34 @@ const SettingsModal = ({ onClose, activeGaleriaId, onGaleriaChange, resaltarVinc
             </div>
           )}
         </div>
+
+        {/* SECCIÓN 4B: MIS CUADROS VINCULADOS */}
+        {marcos && marcos.length > 0 && (
+          <div className="modal-seccion">
+            <h3>Mis Cuadros Físicos</h3>
+            <p className="modal-explicacion">Administra las pantallas conectadas a tu cuenta.</p>
+            <div className="galerias-list">
+              {marcos.map(m => (
+                <div key={m.id} className="galeria-item">
+                  <div className="galeria-info">
+                    <span className="galeria-badge">🖼️</span>
+                    <span className="galeria-name">{m.nombre}</span>
+                    <span className="galeria-owner">
+                      (Viendo: {m.galeria_activa_nombre})
+                    </span>
+                  </div>
+                  <button 
+                    onClick={() => handleDesvincularCuadro(m.id, m.nombre)} 
+                    className="btn-delete-galeria"
+                    style={{ backgroundColor: '#dc3545' }}
+                  >
+                    Desvincular
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* SECCIÓN 5: SOLICITUDES DE UNIÓN PENDIENTES */}
         {solicitudes.length > 0 && (

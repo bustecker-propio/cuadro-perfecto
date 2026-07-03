@@ -86,3 +86,8 @@ export const seleccionarGaleriaActiva = async (galeria_id) => {
   const response = await apiClient.post('/galeria/marco/cambiar-galeria/', { galeria_id });
   return response.data;
 };
+export const desvincularCuadro = async (marcoId) => {
+  const response = await apiClient.delete(/galeria/marco//desvincular/);
+  return response.data;
+};
+

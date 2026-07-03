@@ -552,3 +552,14 @@ class MarcoListarView(APIView):
                 "galeria_activa_nombre": m.galeria_activa.nombre if m.galeria_activa else "Ninguna"
             })
         return Response(marcos_data, status=status.HTTP_200_OK)
+
+class MarcoDesvincularView(APIView):
+    permission_classes = [IsAuthenticated]
+    
+    def delete(self, request, pk, *args, **kwargs):
+        try:
+            marco = MarcoDispositivo.objects.get(id=pk, creador=request.user)
+            marco.delete()
+            return Response({"status": "ok", "message": "Marco desvinculado exitosamente."}, status=status.HTTP_200_OK)
+        except MarcoDispositivo.DoesNotExist:
+            return Response({"error": "Marco no encontrado o no tienes permiso para desvincularlo."}, status=status.HTTP_404_NOT_FOUND)

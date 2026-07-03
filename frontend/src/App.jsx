@@ -287,10 +287,12 @@ function App() {
           onGaleriaChange={handleGaleriaChange} 
           resaltarVincular={resaltarSeccionVincular}
           onVincularSuccess={cargarMarcos}
-        />
+          marcos={marcos}
+          cargarMarcos={cargarMarcos}
       )}
     </>
   );
 }
+
 
 export default App;
