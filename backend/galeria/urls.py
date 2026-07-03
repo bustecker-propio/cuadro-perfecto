@@ -47,5 +47,5 @@ urlpatterns = [
     path('marco/vincular/estado/', MarcoVincularEstadoView.as_view(), name='marco_vincular_estado'),
     path('marco/vincular/confirmar/', MarcoVincularConfirmarView.as_view(), name='marco_vincular_confirmar'),
     path('marco/mis-marcos/', MarcoListarView.as_view(), name='marco_listar_usuario'),
-    path('marco/<int:pk>/desvincular/', MarcoDesvincularView.as_view(), name='marco_desvincular'),
+    path('marco/<uuid:pk>/desvincular/', MarcoDesvincularView.as_view(), name='marco_desvincular'),
 ]
