@@ -559,6 +559,10 @@ class MarcoDesvincularView(APIView):
     def delete(self, request, pk, *args, **kwargs):
         try:
             marco = MarcoDispositivo.objects.get(id=pk, creador=request.user)
+            # Notificar al dispositivo vía MQTT para que se dé cuenta inmediatamente
+            topic = f"cuadros/dispositivo/{marco.id}/comando"
+            publicar_mensaje_mqtt(topic, {"accion": "desvincular"}, retain=False)
+            
             marco.delete()
             return Response({"status": "ok", "message": "Marco desvinculado exitosamente."}, status=status.HTTP_200_OK)
         except MarcoDispositivo.DoesNotExist:

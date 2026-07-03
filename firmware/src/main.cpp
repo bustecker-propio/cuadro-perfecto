@@ -1331,6 +1331,9 @@ void mqttCallback(char *topic, byte *payload, unsigned int length) {
 
           // Forzar sincronización completa de la nueva galería
           necesitaSincronizarCatalogo = true;
+        } else if (accion == "desvincular") {
+          Serial.println("Comando de desvinculacion recibido por MQTT.");
+          necesitaSincronizarCatalogo = true;
         }
       }
     }
