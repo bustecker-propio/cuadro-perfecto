@@ -1,0 +1,129 @@
+/* frontend/src/AniversarySplash.css */
+
+:root {
+  --color-fondo: #ffebee; /* Rosado ultra claro de fondo, similar a tu imagen */
+  --color-trazo-corazon: #ff4d6d;
+}
+
+.splash-escena {
+  position: fixed; /* Ocupa toda la pantalla flotando sobre la app */
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: var(--color-fondo);
+  overflow: hidden; /* Evita scrolls raros */
+  z-index: 9999; /* Asegura que esté arriba de todo */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Quicksand', sans-serif;
+}
+
+/* Base para las imágenes de corazones */
+.corazon-pulsante {
+  position: absolute;
+  /* El punto de origen de la animación es el centro del corazón */
+  transform-origin: center; 
+  opacity: 0.3; /* Por defecto son suaves */
+  
+  /* Nombre de la animación CSS definida abajo */
+  animation-name: pulsoCorazon;
+  animation-iteration-count: infinite; /* Púlsan para siempre */
+  animation-timing-function: ease-in-out; /* Movimiento suave */
+}
+
+/* --- KEYFRAMES CSS: La animación del pulso --- */
+@keyframes pulsoCorazon {
+  0% {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scale(1.25);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.35;
+  }
+}
+
+/* Efecto Glassmorphism sobre el patrón para que el texto sea legible */
+.splash-vidrio {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  background: rgba(255, 235, 238, 0.4); /* Fondo rosado semitransparente */
+  z-index: 1; /* Arriba de los corazones, debajo del texto */
+}
+/* ... código superior intacto (corazones, keyframes, splash-vidrio) ... */
+
+/* Nuevo contenedor que agrupa texto y botón */
+.contenedor-mensaje {
+  position: relative;
+  z-index: 2; /* Arriba de todo */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px; /* Separación entre el título y el botón */
+  
+  /* Estado inicial (oculto y desplazado hacia abajo) */
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 1.5s ease-out, transform 1.5s ease-out;
+}
+
+/* Clase que activa la animación desde React */
+.contenedor-mensaje.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Estilos para el texto central */
+.mensaje-aniversario {
+  font-family: 'Fredoka', sans-serif;
+  font-size: 4rem;
+  color: var(--color-trazo-corazon);
+  text-shadow: 2px 2px 8px rgba(255, 77, 109, 0.2);
+  font-weight: 700;
+  margin: 0;
+  text-align: center;
+}
+
+/* Estilos del nuevo botón */
+.btn-entrar {
+  font-family: 'Quicksand', sans-serif;
+  background: linear-gradient(135deg, #ff4d6d 0%, #ff758c 100%);
+  color: white;
+  font-size: 1.3rem;
+  font-weight: bold;
+  padding: 15px 40px;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 10px 20px rgba(255, 77, 109, 0.3);
+  transition: all 0.3s ease;
+  letter-spacing: 1px;
+}
+
+.btn-entrar:hover {
+  transform: translateY(-5px) scale(1.05);
+  box-shadow: 0 15px 25px rgba(255, 77, 109, 0.5);
+  background: linear-gradient(135deg, #ff758c 0%, #ff8fa3 100%);
+}
+
+/* Adaptación rápida para móviles */
+@media (max-width: 768px) {
+  .mensaje-aniversario {
+    font-size: 3rem;
+    padding: 0 20px;
+  }
+  
+  .btn-entrar {
+    font-size: 1.1rem;
+    padding: 12px 30px;
+  }
+}
