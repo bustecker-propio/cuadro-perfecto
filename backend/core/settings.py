@@ -157,3 +157,9 @@ MQTT_PORT = int(os.environ.get('MQTT_PORT', 1883))
 MQTT_USER = os.environ.get('MQTT_USER', '')
 MQTT_PASS = os.environ.get('MQTT_PASS', '')
 MQTT_USE_TLS = os.environ.get('MQTT_USE_TLS', 'False') == 'True'
+# CSRF Trusted Origins for admin behind proxy
+CSRF_TRUSTED_ORIGINS = ['https://' + host for host in ALLOWED_HOSTS if host] + ['https://' + host for host in CORS_ALLOWED_ORIGINS if host]
+
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
